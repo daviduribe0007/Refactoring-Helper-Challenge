@@ -85,7 +85,7 @@ public class HelperKata {
 
     private static String getBonoForObject() {
         ANTERIOR_BONO = typeBono(bonoEnviado);
-        return bonoForObject = bonoEqualsBonoEnviadoBoolean() ? null : bonoEnviado;
+        return Boolean.TRUE.equals(bonoEqualsBonoEnviadoBoolean()) ? null : bonoEnviado;
     }
 
     private static Boolean bonoEqualsBonoEnviadoBoolean() {
