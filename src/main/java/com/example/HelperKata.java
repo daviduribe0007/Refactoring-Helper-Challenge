@@ -87,14 +87,18 @@ public class HelperKata {
     }
 
     private static boolean bonoWithAstericksBoolean(String bonoIn) {
-        return bonoIn.startsWith("*") &&
-                bonoIn.length() <= 43;
+        return bonoIn.startsWith("*")
+                && validLengthBono(bonoIn,1,43);
+    }
+
+    private static boolean validLengthBono(String bonoIn, Integer max , Integer min) {
+        return bonoIn.replace("*", "").length() >= max
+                && bonoIn.replace("*", "").length() <= min;
     }
 
     private static boolean bonoLengthBoolean(String bonoIn) {
         return bonoIn.chars().allMatch(Character::isDigit)
-                && bonoIn.length() >= 12
-                && bonoIn.length() <= 13;
+                && validLengthBono(bonoIn,12,13);
     }
 
     public static boolean validateDateRegex(String dateForValidate) {
