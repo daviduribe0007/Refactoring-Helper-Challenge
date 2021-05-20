@@ -25,20 +25,35 @@ public class HelperKata {
 
     public static Flux<CouponDetailDto> getListFromBase64File(final String fileBase64) {
         String characterSeparated = FileCSVEnum.CHARACTER_DEFAULT.getId();
-        return createFluxFrom(fileBase64)
-                .map(coupon -> Optional
-                        .of(asignCoupon(coupon
-                                .split(characterSeparated)))
-                        .filter(HelperKata::emptyCoupon)
-                        .map(coupon2 -> {
-                            errorMessage = ExperienceErrorsEnum.FILE_ERROR_COLUMN_EMPTY.toString();
-                            return couponDetailDto();
-                        })
-                        .orElseGet(() -> {
-                            validateCodeDuplicate();
-                            return couponDetailDto();
-                        }));
 
+        return createFluxFrom(fileBase64)
+                .map(coupon -> optionals(asignCoupon(coupon
+                        .split(characterSeparated))));
+
+    }
+
+    private static CouponDetailDto optionals(Coupon coupon) {
+
+        return Optional
+                .of(coupon)
+                .filter(HelperKata::emptyCoupon)
+                .map(couponFiltered ->
+                        couponWithFileErrorColumnEmpty()
+                )
+                .orElseGet(() ->
+                   getCouponDefaultDetailDto()
+                );
+
+    }
+
+    private static CouponDetailDto getCouponDefaultDetailDto() {
+        validateCodeDuplicate();
+        return couponDetailDto();
+    }
+
+    private static CouponDetailDto couponWithFileErrorColumnEmpty() {
+        errorMessage = ExperienceErrorsEnum.FILE_ERROR_COLUMN_EMPTY.toString();
+        return couponDetailDto();
     }
 
     private static void validateCodeDuplicate() {
@@ -47,6 +62,7 @@ public class HelperKata {
             errorMessage = ExperienceErrorsEnum.FILE_ERROR_CODE_DUPLICATE.toString();
         }
     }
+
 
     private static CouponDetailDto couponDetailDto() {
 
@@ -88,17 +104,17 @@ public class HelperKata {
 
     private static boolean bonoWithAstericksBoolean(String bonoIn) {
         return bonoIn.startsWith("*")
-                && validLengthBono(bonoIn,1,43);
+                && validLengthBono(bonoIn, 1, 43);
     }
 
-    private static boolean validLengthBono(String bonoIn, Integer max , Integer min) {
+    private static boolean validLengthBono(String bonoIn, Integer max, Integer min) {
         return bonoIn.replace("*", "").length() >= max
                 && bonoIn.replace("*", "").length() <= min;
     }
 
     private static boolean bonoLengthBoolean(String bonoIn) {
         return bonoIn.chars().allMatch(Character::isDigit)
-                && validLengthBono(bonoIn,12,13);
+                && validLengthBono(bonoIn, 12, 13);
     }
 
     public static boolean validateDateRegex(String dateForValidate) {
