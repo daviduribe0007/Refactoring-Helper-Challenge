@@ -93,13 +93,16 @@ public class HelperKata {
     }
 
 
-    public static String typeBono(String bonoIn) {
-        if (bonoLengthBoolean(bonoIn)) {
-            return ValidateCouponEnum.EAN_13.getTypeOfEnum();
-        }
-        return bonoWithAstericksBoolean(bonoIn) ? ValidateCouponEnum.EAN_39.getTypeOfEnum()
-                : ValidateCouponEnum.ALPHANUMERIC.getTypeOfEnum();
+    private static String typeBono(String bonoIn) {
+       return  bonoLengthBoolean(bonoIn) ?
+               ValidateCouponEnum.EAN_13.getTypeOfEnum():
+               validateAlphanumber(bonoIn);
+           }
 
+    private static String validateAlphanumber(String bonoIn){
+        return bonoWithAstericksBoolean(bonoIn) ?
+                ValidateCouponEnum.EAN_39.getTypeOfEnum():
+                ValidateCouponEnum.ALPHANUMERIC.getTypeOfEnum();
     }
 
     private static boolean bonoWithAstericksBoolean(String bonoIn) {
